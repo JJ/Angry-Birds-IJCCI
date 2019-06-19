@@ -120,12 +120,12 @@ entries participated, of which J. Yuxuan et al., were able to generate
 random quotations with different components of a level; J. Xu et
 al. generated levels that look like pixel images. A third approach (by
 C. Kocaogullar) translated music patterns to generate structures. The
-winner was Iratus Aves, a new iteration of the work by M. Stephenson
+winner was {\em Iratus Aves}, a new iteration of the work by M. Stephenson
 and J. Renz \cite{stephenson2017generating,stephenson2016procedural},
-which follows \textit{constructive method}. In this work, the
+which follows a \textit{constructive method}. In this work, the
 likelihood of selecting a certain block is given by a probability
-table, which was tuned using an optimization method. Then, blocks are
-placed following a tree structure. 
+table, which was tuned using an optimization method. Blocks are then
+stacked following a tree structure.
 
 A constructive method ensures local stability, but not global
 stability, which must be evaluated once the whole structure is
@@ -160,7 +160,11 @@ Levels are evaluated executing them in the simulator and checking
 their average stability, considering the speed of every block when
 erected -- which must tend to be zero when having a stable structure
 --. The authors designed specialized crossover and mutation operators,
-aiming to maintain the consistency of newly generated solutions. 
+aiming to maintain the consistency of newly generated solutions.
+
+The approach proposed by Stephenson et al. \cite{stephenson2019agent}
+is based on agents, and is focused on offering custom experience for
+specific players. 
 
 However, this work proposes a different approach: \textit{free-form
   evolution}.  If we look outside the domain of game development and
@@ -177,7 +181,17 @@ generated patterns,  but still restrains the formation of disjoint
 structures, for instance, a defensive tower before a simple pigsty in
 our context. 
 
-We aim at following a realistic structure generation approach, without constraining it to a fixed form, thus advancing the state of the art by allowing the creation of Angry Birds levels having any arrangement. The next section will describe how we characterize this problem and our approach to it. In our previous paper \cite{DBLP:conf/evoW/CalleGGV19} we explored this approach and found as one of its shortcomings the fact that the evaluation of generated structures through the simulator was lengthy and didn't leave the algorithm enough time to explore the search space. In this paper, we try to tackle that problem, as well as take additional steps to increase the complexity of generated structures.
+We aim at following a realistic structure generation approach, without
+constraining it to a fixed form, thus advancing the state of the art
+by allowing the creation of Angry Birds levels having any
+arrangement. The next section will describe how we characterize this
+problem and our approach to it. In our previous paper
+\cite{DBLP:conf/evoW/CalleGGV19} we explored this approach and found
+as one of its shortcomings the fact that the evaluation of generated
+structures through the simulator was lengthy and didn't leave the
+algorithm enough time to explore the search space. In this paper, we
+try to tackle that problem, as well as take additional steps to
+increase the complexity of generated structures. 
 
 \section{Problem Description}
 \label{sec:angry}

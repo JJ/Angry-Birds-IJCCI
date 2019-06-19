@@ -40,18 +40,24 @@ Game development, Angry Birds, Level generation }
 
 \section{\uppercase{Introduction}}
 \label{sec:intro}
-\textit{Angry Birds} is a multiplatform video game created in 2009 by the Rovio Entertainment  Corporation. Each level of the game consists of a collection of structures made out of blocks in which comic  {\em pig} characters are hiding;  the player has to fire from a slingshot different {\em bird} characters, each having different abilities and moods.  The objective of the game is to destroy all the pigs by knocking down the structures or just hitting them directly.  The game relies on gravity to create interesting puzzles by closely resembling the dynamics of real-world structures. From the Procedural Content Generation (PCG) perspective,  the challenge is to generate stable structures that are robust enough to take more than a single hit before crumbling to the ground. Even before that, they need to stand on their own as the level starts.
+\textit{Angry Birds} is a multiplatform video game created in 2009 by
+the Rovio Entertainment  Corporation. Each level of the game consists
+of a collection of structures made out of blocks in which comic  {\em
+  pig} characters are hiding;  the player has to fire from a slingshot
+different {\em bird} characters, each having different abilities and
+moods.  The objective of the game is to destroy all the pigs by
+knocking down the structures or just hitting them directly.  The game
+relies on gravity to create interesting puzzles by closely resembling
+the dynamics of real-world structures. From the Procedural Content
+Generation (PCG) perspective,  the challenge is to generate stable
+structures that are robust enough to take more than a single hit
+before crumbling to the ground. Even before that, they need to stand
+on their own as the level starts. 
 
-% There is a number of competitions centered around playing AI agents for specific 
-% games or genres, but it is less common to find PCG competitions like the 
-% \textit{Angry Birds Level Generation Competition}, whose third edition
-% was celebrated in 2018 during CIG \cite{aibirds}.
-% %Participants must build 
-% %computer programs that are able to generate levels for the \textit{Angry Birds} game;
-% Generated levels must first be valid (i. e. not crash), and then,
-% they are evaluated and judged for playability and aesthetics.
-
-The objective of this work is to design an algorithm capable of generating basic game structures for \textit{Angry Birds} and eventually generating levels using these components. We can break it down to the following, more concise objectives: 
+The objective of this work is to design an algorithm capable of
+generating basic game structures for \textit{Angry Birds} and
+eventually generating levels using these components. We can break it
+down to the following, more concise objectives: 
 
 \begin{itemize}
 	\item Design a Search-Based PCG algorithm (SBPCG) to exploit the expressiveness and variability of EAs.
@@ -68,8 +74,16 @@ methods, they can be a good option to perform this kind of systems.
 
 The main focus of the paper is on the first two objectives. First, to produce free-form structures that do not collapse. Also, to extract information from the generated structures to be able to evaluate them without needing to run a costly simulation.  We will also target replayability by emphasizing the generation of free-form structures. Free-form, in this case, means that structures do not follow a preconceived pattern. If all levels follow a simple or repetitive pattern, users could be bored and disengage. Our goal is to avoid this by creating diverse structures whose form is only constrained by gravity. However, free-form also implies that structural integrity is not guaranteed, and as structures have a realistic gravity, they could collapse at the beginning of a level. We need to incorporate this factor into the \textit{fitness function}.  We will be searching { \em valid} structures, whose playability has to be optimized.  In this paper, we do not address other aspects of level design like aesthetics, the ability of players or gameplay. For instance, the search gives no advantage to symmetric structures or challenging levels.
 
-In this paper, we will use a  {\em direct fitness function} \cite{togelius2010search}; in this kind of functions, we extract measurable features from the generated content and map them to a fitness score.
-However, this fitness function is a time-consuming task since it involves the generation of a graphic representation of the structure and the simulation of the falling motion. If we have to evaluate every single individual in the population, we will not be able to cover enough of the free-form search space to find a good enough solution. So we must minimize the actual number of structures that are simulated by applying heuristics to the data structure and assigning it a fitness even before the simulation.
+In this paper, we will use what \cite{togelius2010search} calls {\em
+  direct fitness function}, this function computes a score from measurable features of the generated content.
+However, this fitness function is a time-consuming task since it
+involves the generation of a graphic representation of the structure
+and the simulation of the falling motion. If we have to evaluate every
+single individual in the population, we will not be able to cover
+enough of the free-form search space to find a good enough
+solution. So we must minimize the actual number of structures that are
+simulated by applying heuristics to the data structure and assigning
+it a fitness even before the simulation. 
 
 
 This paper is organized as follows: in the next section, we present the state of the art in this type of level generation, as well as its relation to the problem of generating structurally sound structures. Our proposed method for generating Angry Birds levels is described next in Section \ref{sec:angry}. Next experiments are presented in section \ref{ch:res}. We present our conclusions in \ref{sec:conclusions}. 
@@ -106,7 +120,17 @@ operators, aiming to maintain some consistency in the new solutions
 generated.
 However, this work proposes a different approach: \textit{free-form evolution}.  If we look outside the domain of game development and focus on structural optimization in architecture, there are several proposals using search-based algorithms. We can find a metaheuristic called Cuckoo Search \cite{gandomi2013cuckoo} which performance was tested with structural optimization. However, this optimization is heavily parametrized and we are looking for the evolution of structures that do not follow a predefined pattern.  Another approach for structure design is using Generative Grammatical Encodings \cite{hornby2001advantages} where L-system and its production rules are considered individuals. This method increases the number of generated patterns,  but still restrains the formation of disjoint structures, for instance, a defensive tower before a simple pigsty in our context.
 
-We aim at following a realistic structure generation approach, without constraining it to a fixed form, thus advancing the state of the art by allowing the creation of Angry Birds levels having any arrangement. The next section will describe how we characterize this problem and our approach to it. In our previous paper \cite{DBLP:conf/evoW/CalleGGV19} we explored this approach and found as one of its shortcomings the fact that the evaluation of generated structures through the simulator was lengthy and didn't leave the algorithm enough time to explore the search space. In this paper, we try to tackle that problem, as well as take additional steps to increase the complexity of generated structures.
+We aim at following a realistic structure generation approach, without
+constraining it to a fixed form, thus advancing the state of the art
+by allowing the creation of Angry Birds levels having any
+arrangement. The next section will describe how we characterize this
+problem and our approach to it. In our previous paper
+\cite{DBLP:conf/evoW/CalleGGV19} we explored this approach and found
+as one of its shortcomings the fact that the evaluation of generated
+structures through the simulator was lengthy and didn't leave the
+algorithm enough time to explore the search space. In this paper, we
+try to tackle that problem, as well as take additional steps to
+increase the complexity of generated structures. 
 
 \section{Problem Description}
 \label{sec:angry}
@@ -398,18 +422,10 @@ whose result is shown in Table \ref{t:resOver1} shows an overview of the results
 		experiment. 40 runs for E5 and E6.
 		G: number of generations, E: experiment 
 		number} % What
-	% is E? Is that the average? Number of
-	% generations up to what?
-	% Also explain the importance of the
-	% fitness as an evaluation of the
-	% quality of the solutions - JJ
-	% Also, average over what. Best individual in every experiment?
-	% Last generation? - JJ
-	% Modified caption. Better? - Laura
 	\label{t:resOver1}
 \end{table}
 
-\begin{table}
+\begin{table*}
 	\myfloatalign
 	\begin{tabular}{cclclcl}
 		& \textbf{Best}& $\sigma$  &\textbf{Avg}&$\sigma$  & \textbf{Worst}&$\sigma$ \\ \hline
@@ -437,7 +453,7 @@ whose result is shown in Table \ref{t:resOver1} shows an overview of the results
 	% Last generation? - JJ
 	% Modified caption. Better? - Laura
 	\label{t:resOver2}
-\end{table}
+\end{table*}
 
 \subsection{Baseline experiment}\label{E1}
 

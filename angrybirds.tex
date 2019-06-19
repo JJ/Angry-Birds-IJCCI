@@ -54,6 +54,10 @@ structures that are robust enough to take more than a single hit
 before crumbling to the ground. Even before that, they need to stand
 on their own as the level starts. 
 
+Search-based Procedural Content Generation (SBPCG), is a type of a \textit{generate-and-test} approach to PCG which is usually tackled with Evolutionary Algorithms(EA) \cite{togelius2010search}. The challenges faced by SBPCG are not far from those found in EAs; since they are search
+methods, they can be a good option to perform this kind of systems. 
+
+
 The objective of this work is to design an algorithm capable of
 generating basic game structures for \textit{Angry Birds} and
 eventually generating levels using these components. We can break it
@@ -66,13 +70,7 @@ down to the following, more concise objectives:
 \end{itemize} 
 
 
-The main focus of the paper is on the first two objectives. First, to produce free-form structures that do not collapse, that is that they are valid. Also, to extract information from the generated structures to be able to evaluate them without needing to run a costly simulation.  We will target replayability by emphasizing the generation of free-form structures. Free-form, in this case, means that structures do not follow a preconceived pattern. If all levels follow a simple or repetitive pattern, users could be bored and disengage. Our goal is to avoid this by creating diverse structures whose form is only constrained by gravity.
-
-Search-based Procedural Content Generation (SBPCG), is a type of a \textit{generate-and-test} approach to PCG which is usually tackled with Evolutionary Algorithms(EA) \cite{togelius2010search}. The challenges faced by SBPCG are not far from those found in EAs; since they are search
-methods, they can be a good option to perform this kind of systems. 
-
-
-The main focus of the paper is on the first two objectives. First, to produce free-form structures that do not collapse. Also, to extract information from the generated structures to be able to evaluate them without needing to run a costly simulation.  We will also target replayability by emphasizing the generation of free-form structures. Free-form, in this case, means that structures do not follow a preconceived pattern. If all levels follow a simple or repetitive pattern, users could be bored and disengage. Our goal is to avoid this by creating diverse structures whose form is only constrained by gravity. However, free-form also implies that structural integrity is not guaranteed, and as structures have a realistic gravity, they could collapse at the beginning of a level. We need to incorporate this factor into the \textit{fitness function}.  We will be searching { \em valid} structures, whose playability has to be optimized.  In this paper, we do not address other aspects of level design like aesthetics, the ability of players or gameplay. For instance, the search gives no advantage to symmetric structures or challenging levels.
+The main focus of the paper is on the first two objectives. First, to produce free-form structures that do not collapse, that is that they are valid. Also, to extract information from the generated structures to be able to evaluate them without needing to run a costly simulation.  We will target replayability by emphasizing the generation of free-form structures. Free-form, in this case, means that structures do not follow a preconceived pattern. If all levels follow a simple or repetitive pattern, users could be bored and disengage. Our goal is to avoid this by creating diverse structures whose form is only constrained by gravity. However, free-form also implies that structural integrity is not guaranteed, and as structures have a realistic gravity, they could collapse at the beginning of a level. We need to incorporate this factor into the \textit{fitness function}.  We will be searching { \em valid} structures, whose playability has to be optimized.  In this paper, we do not address other aspects of level design like aesthetics, the ability of players or gameplay. For instance, the search gives no advantage to symmetric structures or challenging levels.
 
 In this paper, we will use what \cite{togelius2010search} calls {\em direct fitness function}, this function computes a score from measurable features of the generated content.However, this fitness function is a time-consuming task since it involves the generation of a graphic representation of the structure and the simulation of the falling motion. If we have to evaluate every single individual in the population, we will not be able to cover enough of the free-form search space to find a good enough solution. So we must minimize the actual number of structures that are simulated by applying heuristics to the data structure and assigning it a fitness even before the simulation.
 

@@ -99,8 +99,9 @@ This paper is organized as follows: in the next section, we present
 the state of the art in this type of level generation, as well as its
 relation to the problem of generating structurally sound
 structures. Our proposed method for generating Angry Birds levels is
-described next in Section \ref{sec:angry}. Next experiments are
-presented in section \ref{ch:res}. We present our conclusions in
+described next in Section \ref{sec:angry}. The new experiments
+performed for this paper and its results are presented next in section
+\ref{ch:res}. We present our conclusions in 
 \ref{sec:conclusions}.
 
 
@@ -185,7 +186,7 @@ constraining it to a fixed form, thus advancing the state of the art
 by allowing the creation of Angry Birds levels having any
 arrangement. The next section will describe how we characterize this
 problem and our approach to it. In our previous paper
-\cite{DBLP:conf/evoW/CalleGGV1919} we explored this approach and found
+\cite{DBLP:conf/evoW/CalleGGV19anon} we explored this approach and found
 as one of its shortcomings the fact that the evaluation of generated
 structures through the simulator was lengthy and didn't leave the
 algorithm enough time to explore the search space. In this paper, we
@@ -194,7 +195,24 @@ increase the complexity of generated structures.
 
 \section{Problem Description}
 \label{sec:angry}
-In a previous work, we used {\em Science Birds} \cite{ferreira2014search}  as a starting point. Developed by Lucas Ferreira and Claudio Toledo, Science Birds has become the main open source Angry Birds simulator. However, we needed to modify the code in order to produce an output with the additional data needed to automate that work. The code is available in the GitHub repository \url{https://github.com/Laucalle/ScienceBirds}. The additional data contains the position and the average magnitude of the velocity of each block that remains after the simulation. One advantage is that the whole experiment can run without user intervention. Another advantage is that the amount of time spent on the simulation of each level is minimized to some extent.  Reducing the simulation time not only increases the number of evaluations by a certain range of time, but it is also a factor in competitions, where there is a fixed time limit for participants.
+
+In a previous work, we used {\em Science Birds}
+\cite{ferreira2014search}  as a starting point. Developed by Lucas
+Ferreira and Claudio Toledo, Science Birds has become the main open
+source Angry Birds simulator. However, we needed to modify the code in
+order to produce an output with the additional data needed to automate
+that work. The code is available in the GitHub repository
+% \url{https://github.com/Laucalle/ScienceBirds}
+\url{https://url.hidden}
+. The additional data
+contains the position and the average magnitude of the velocity of
+each block that remains after the simulation. One advantage is that
+the whole experiment can run without user intervention. Another
+advantage is that the amount of time spent on the simulation of each
+level is minimized to some extent.  Reducing the simulation time not
+only increases the number of evaluations by a certain range of time,
+but it is also a factor in competitions, where there is a fixed time
+limit for participants. 
 
 
 To further decrease simulation time, in this paper, we use the Box2D (\url{https://box2d.org}) physics engine. This engine, written in C++, was initially used for the actual Angry Birds game. By just simulating the positioning of objects in memory, we can avoid launching the whole game, using bitmaps and screen rendering, which adds overhead to the process of fitness evaluation. Even if in this Box2D simulation we do not have the resistance of the blocks implemented, we can test the stability of level much more efficiently, since there is no overhead in computing things unrelated to Physics, such as the GUI. If we do not have block resistance in a simulation, blocks will not be destroyed when they hit each other; in that case, the fitness function should not take into account before and remaining blocks.
@@ -312,16 +330,6 @@ population and the best will be a parent in this generation. This is
 repeated until a certain percentage of pairs have been reached. It is important 
 to note that individuals chosen are not removed from the population and 
 therefore they can appear several times in the list of parents. 
-% Is there a reason for this? For small populations some individual could
-% be the parent of every member of the next generation :)  - Mario
-% The reason was we were getting very poor results, beacuse we start with very 
-%few fairly good individuals. Should this be mentioned here? - Laura
-% Yes, you should mention it. Beacuse this a good problem for future work. 
-% For instance you could try to do this only at the begining and after several
-% generations change it to something not as extreme. This means that the 
-%parameters
-% of the algorithm are dynamic or adapted. - Mario
-% OK, I added it to the Future Work section. 
 
 Once the parents have been selected, we chose from two different methods of 
 combination:
@@ -501,26 +509,9 @@ value with the rest of the experiments.
 \section{Conclusions and Future Work} 
 \label{sec:conclusions}
 
-% ----- probably should be eliminated --- 
-% Here, we briefly recap several aspects of the development of this project. 
-% First, we reviewed the context of the problem: PCG. In section 
-%\ref{sec:intro}, 
-% we looked at the main reasons for its existence: from replacing human 
-% creativity where it cannot reach (unlimited or personalized) to enhancing and 
-% speeding the creative process. In some cases, PCG can  be considered a kind 
-%of 
-% creative expression for itself. The technical background to approach the 
-% problem is discussed in section \ref{sec:soa}.
-% --- up to here --
-
-This paper was developed with the main objective of implementing a
-competitive entry for the Angry Birds level generation contest, and  a
-set of sub-objectives in mind: exploring the expressiveness and variability of 
-SBPCG with evolutionary techniques, adapting the game to extract data from 
-execution and producing stable structures under gravity, in a simulated environment.
-% What the intro to the conclusion should say are the main objectives
-% of this paper, and whether they have been, or not, achieved or to
-% what extent - JJ
+This paper was developed with the main objective of speeding up the
+implementation of a system for generating free form Angry Birds
+levels. 
 
 % Antonio - This is my Proposal for this paragraph
 For this aim we have implemented an Evolutionary Algorithm able to optimize 
@@ -611,10 +602,7 @@ set out to achieve at the beginning.
 
 In order to improve the results of the method, different constraints could be 
 expressed as multiple objectives. Overlapping blocks and velocity could 
-be treated as minimization objectives and height as a maximization one. % but 
-%of course we don't need
-                                % to minimize height any more... - JJ
-                                % Corrected - Laura
+be treated as minimization objectives and height as a maximization one. 
 
 If we pay attention at the stages of evolution in this work, there is also 
 room for improvement in the genetic operators. For example, the initialization 

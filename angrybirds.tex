@@ -92,7 +92,10 @@ population, we will not be able to cover enough of the free-form
 search space to find a good enough solution. So we must minimize the
 actual number of structures that are simulated by applying heuristics
 to the data structure and assigning it a fitness even before the
-simulation. 
+simulation. Additionally, we will try to improve the design of the
+fitness function so that it does not focus only on creating stable
+structures, but also structures that have a better appearance and
+aesthetics. 
 
 
 This paper is organized as follows: in the next section, we present
@@ -215,7 +218,18 @@ but it is also a factor in competitions, where there is a fixed time
 limit for participants. 
 
 
-To further decrease simulation time, in this paper, we use the Box2D (\url{https://box2d.org}) physics engine. This engine, written in C++, was initially used for the actual Angry Birds game. By just simulating the positioning of objects in memory, we can avoid launching the whole game, using bitmaps and screen rendering, which adds overhead to the process of fitness evaluation. Even if in this Box2D simulation we do not have the resistance of the blocks implemented, we can test the stability of level much more efficiently, since there is no overhead in computing things unrelated to Physics, such as the GUI. If we do not have block resistance in a simulation, blocks will not be destroyed when they hit each other; in that case, the fitness function should not take into account before and remaining blocks.
+To further decrease simulation time, in this paper, we use the Box2D
+(\url{https://box2d.org}) physics engine. This engine, written in C++,
+was initially used for the actual Angry Birds game. By just simulating
+the positioning of objects in memory, we can avoid launching the whole
+game, using bitmaps and screen rendering, which adds overhead to the
+process of fitness evaluation. Even if in this Box2D simulation we do
+not have the resistance of the blocks implemented, we can test the
+stability of level much more efficiently, since there is no overhead
+in computing things unrelated to Physics, such as the GUI. If we do
+not have block resistance in a simulation, blocks will not be
+destroyed when they hit each other; in that case, the fitness function
+should not take into account before and remaining blocks. 
 
 %\subsection{Evolutionary Algorithm}\label{ch:Representation}
 
@@ -372,7 +386,11 @@ maintaining the size of the population.
 The information that describes a level can be too complex to have a binary 
 representation as pure genetic algorithms suggest, so the framework used should be 
 flexible enough to support complex data structures. This prevented us from using other 
-frameworks and therefore a new framework was implemented. The source code is open source and can be found again in GitHub at \url{https://github.com/Laucalle/AngryBirdsLevelGenerator}. % Is this true?
+frameworks and therefore a new framework was implemented. The source
+code is open source and can be found again in GitHub at
+%\url{https://github.com/Laucalle/AngryBirdsLevelGenerator}
+\url{https://hidden.url}
+. % Is this true?
 
 In order to assess the proposed methods and verify if they meet our
 objective, we performed a series of experiments presented in the next.
@@ -380,8 +398,13 @@ objective, we performed a series of experiments presented in the next.
 %************************************************
 \section{Experiments and Results}\label{ch:res}
 
-We set out to evolve free-form structures, and this means searching in a larger space. In this experiment, we test how using a Physics engine enables us to evaluate much more levels than a game engine simulation. In order to do this, we compare the results of experiments with both simulators. Tables \ref{t:resOver1} and \ref{t:resOver2} 
-show an overview of the results. Experiments \textbf{E1} to \textbf{E4} were implemented 
+We set out to evolve free-form structures, and this means searching in
+a larger space. In this experiment, we test how using a Physics engine
+enables us to evaluate much more levels than a game engine
+simulation. In order to do this, we compare the results of experiments
+with both simulators. Tables \ref{t:resOver1} and \ref{t:resOver2} 
+show an overview of the results, including former and present
+experiments. Experiments \textbf{E1} to \textbf{E4} were implemented 
 using a game engine simulator while \textbf{E5} and \textbf{E6} a
 physics engine. The results of experiments 1 to 4 were presented in
 \cite{DBLP:conf/evoW/CalleGGV19anon}; the need to speed up evaluation
@@ -389,7 +412,7 @@ prompted us to move the evaluation of the physics of the structure to
 the program itself, thus avoiding the overhead incurred in entering
 the simulator.
 
-\begin{table}
+\begin{table*}
 	\myfloatalign
 	\begin{tabular}{cclcl}
 		& \textbf{Time(h)} &$\sigma$ & \textbf{G}& $\sigma$ \\ \hline
@@ -399,9 +422,6 @@ the simulator.
 		\textbf{E4}&5.03&(1.46)&365.929&(158.09)  \\  \hline
 		\textbf{E5}&0.099&(0.1)&121.2&(96.89)     \\  \hline 
 		\textbf{E6}&0.788&(0.124)&1000.0&(0) \\  \hline
-		% If possible, add standard deviation here - JJ
-		% I could not find the original spreadsheet, I only have the raw data. I could 
-		%%% not add standard deviation on time - Laura
 		\hline
 	\end{tabular}
 	\caption{Summary of the execution of the last generation in 15-20 runs for each
@@ -409,7 +429,7 @@ the simulator.
 		G: number of generations, E: experiment 
 		number} % What
 	\label{t:resOver1}
-\end{table}
+\end{table*}
 
 \begin{table*}
 	\myfloatalign
@@ -421,41 +441,38 @@ the simulator.
 		\textbf{E4}&0.0018&(0.003)&0.203&(0.068)&0.2997&(0.1)  \\  \hline
 		\textbf{E5}& 1.249&(1.257)&1.276&(1.231)&1.288&(1.219)     \\  \hline 
 		\textbf{E6}& 1.031&(0.853)&1.27&(0.834)&1.328&(0.819) \\  \hline
-		% If possible, add standard deviation here - JJ
-		% I could not find the original spreadsheet, I only have the raw data. I could 
-		%%% not add standard deviation on time - Laura
 		\hline
 	\end{tabular}
-	\caption{Summary of the results of the last generation in 15-20 runs for each
-		experiment. 40 runs for E5 and E6.
-		} % What
-	% is E? Is that the average? Number of
-	% generations up to what?
-	% Also explain the importance of the
-	% fitness as an evaluation of the
-	% quality of the solutions - JJ
-	% Also, average over what. Best individual in every experiment?
-	% Last generation? - JJ
-	% Modified caption. Better? - Laura
+	\caption{Summary of the results of the last generation in
+          15-20 runs for experiments 1 to 4, 40 runs for E5 and E6.} 
 	\label{t:resOver2}
 \end{table*}
 
 \subsection{Removing game and penalizing gaps in Y-axis}\label{E5}
 
-The main problem with the previous experiments (\textbf{E1}-\textbf{E4}) was the time needed to load the Science Birds simulation environment to run the levels, which needed several seconds for loading and obtaining results. So the main objective of this experiment was to find a way to get rid of the in-game simulation. In order to do that, we will use the Box2D \cite{catto2011box2d} Physics engine we mentioned earlier.
+The main problem with the previous experiments
+(\textbf{E1}-\textbf{E4}) was the time needed to load the Science
+Birds simulation environment so that levels could be actually run, which needed several
+seconds for loading and obtaining results. So the main objective of
+this experiment was to find a way to get rid of the in-game
+simulation. In order to do that, we will use the Box2D
+\cite{catto2011box2d} Physics engine we mentioned earlier.
 
 Since game physics do not usually resemble real world physics we adjusted
 the parameters so this simulation and the game behave in the same way.
 As we can see in table \ref{t:resOver1} the execution time drastically
-drops from 5 hours to less than 20 minutes on average, even when running
-more generations in the process.
+drops from 5 hours (in experiment 4) to around 6 minutes on average, even when running
+more generations in the process. This achieves our first objective,
+which was to speed up execution so that we could perform a more
+thorough exploration of the space of Angry Birds structures.
 
 
 This opened the way for performing more 
-operations for the individuals. In this case we chose to penalize
+operations on the individuals. In this case we chose to penalize
 not only the distance to the ground but also the \textit{gaps} in the
 Y-axis, which will make objects drop and maybe break.
-This will encourage individuals to grow vertically and not only horizontally
+This will encourage individuals to grow vertically by giving a better
+score to those with contiguous vertical blocks and not only horizontally
 like in previous experiments. This changes the fitness function, so we
 will have to compare by the actual obtained structure, one of which is
 shown in Figure \ref{f:e5}.
@@ -468,40 +485,74 @@ shown in Figure \ref{f:e5}.
 
 In general, this penalization of gaps creates a faster path to stable
 structures. Still, this path leads to mostly flat structures with 
-some higher block in unstable positions, which
-are structurally solid, but not interesting. One of the stable results is shown in figure \ref{f:e5}.
-% Something more should have to be commented on these results - JJ
+some block placed higher, but still in unstable positions, which
+are structurally solid, but not interesting. 
 
 \subsection{Changing the evaluation function}\label{E6}
 
 Observing results from the previous experiment we realized that what
 evolution found was that laying many blocks on the ground was enough
-to get a high fitness: the average speed was decreased and it will
+to get a high fitness: the average speed, which was minimized during
+evolution, was then obviously low and it will 
 place unstable blocks to cover gaps in Y-axis. In
 order to correct this behaviour we changed the 
-fitness function to take into account the fastest moving object:
+fitness function to take into account the fastest moving object
+instead of the average:
 $$fitness_{indV2} = \max{(V)}$$
-Additionally, we initialized levels including one of a list of pre configured
+Additionally, we initialized levels including one of a list of preconfigured
 blocks in addition to the random initialization used until
 now.
 
 This makes the fitness value depends on just one gene, although it can be a
-different one each time. The improvement of solutions to find acceptable ones
-slowed down % This would have to be proved by a chart
+different one each time, since the fastest moving element might vary
+with mutation. The improvement of solutions to find acceptable ones
+slowed down 
 again, with a different fitness function we cannot compare the fitness
 value with the rest of the experiments. 
- \begin{figure}
+%
+\begin{figure*}
  	\centering
- 	\includegraphics[scale=0.3]{E6.png}
- 	\caption{One of the solutions from \ref{E6}}\label{f:e6}
- \end{figure}
+ 	\includegraphics[scale=0.75]{E6.png}
+ 	\caption{One of the solutions from \ref{E6}. Blue blocks are
+          composed of ice, while brownish blocks and poles are
+          composed of wood. In Angry Birds, blocks differ in
+          flexibility, weight but also fragility.}\label{f:e6}
+ \end{figure*}
 
 
- %Again, you can't simply show a single figure as a result. Maybe show
- %average height, or several best solutions. And always reference the
- %figure - JJ
-%************************************************
+Table \ref{t:resOver1} shows that this again
+increases the time needed to carry out the simulation. It also changes
+the fitness landscape. Looking at Table \ref{t:resOver2}, what we
+can compare mainly is the $\sigma$ and difference between best,
+average and worst; fitness scores are not directly comparable since
+they introduce a new term. What we see is that the variability of
+solutions is decreased with respect to the previous experiment,
+showing that this change increases the robustness of the algorithm,
+but also its exploration capability, since the difference between the
+best, worst and average is bigger than in E5. Figure \ref{f:e6} also
+shows how this fitness generates structures that are stable but also
+have some {\em interesting} appearance, including space that could be
+occupied by pigs below the tables. At the same time, this also shows
+some limitations of this approach, including the fact that three
+tables are stacked one on top of each other, that there are maybe too
+many poles supporting them, and that there are small blocks scattered
+here and there.
 
+The results here show that evolution is able to generate structures
+that do not collapse and also have some appearance that could be
+interesting. However, constraining evolution in particular ways might
+lead to non-interesting structures or a local minimum in the
+evolutionary landscape. Also, generated structures might be
+sub-optimal in the sense that they might contain too many elements
+that do not really contribute to the structure. It would be
+complicated to codify this into a constraint, but it could be taken
+into account in a post-processing of the structure using some greedy
+algorithm.
+
+On the other hand, this last experiment fulfills, at least partially,
+the objectives of this paper: being able to find diverse,
+aesthetically pleasing structures fast, without compromising, in
+advance, with a specific building pattern.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%  CONCLUSIONS  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -511,98 +562,39 @@ value with the rest of the experiments.
 
 This paper was developed with the main objective of speeding up the
 implementation of a system for generating free form Angry Birds
-levels. 
+levels; previously, we implemented an EA that optimized stability of
+generated structures, an objective that was achieved in a previous
+paper. However, there were several problems with these 
+structures generated initially: since their main optimization criterion was stability,
+they were mostly blocks lying on the floor; this was a local minimum
+and it was difficult to escape for that; additionally we needed to
+submit the structure to the simulator and obtain information (such as
+block speed) from it in order to evaluate those structures that
+couldn't be eliminated due to constraints. In this paper we tried to
+move in two different directions: incorporating a Physics engine to
+the main evolutionary algorithm to minimize the need to use the
+Science Birds simulator, and also try and incorporate better criteria
+of structure evaluation so that they build up the kind of structures
+we are used to in Angry Birds.
 
-% Antonio - This is my Proposal for this paragraph
-For this aim we have implemented an Evolutionary Algorithm able to optimize 
-level structures to meet some criteria, being the main one the stability of the 
-constructions.
-%Perhaps the level of achievement of the first objective, exploring the 
-%expressiveness and variability of 
-%SBPCG with evolutionary techniques,
-%is not as easily measurable as the other two. It could seem like
-%this objective has not been fully accomplished: only one SBPCG method
-%has been implemented and tested. However, it was not in the scope of
-%this work to test SBPCG in general, but in this particular case, for
-%this particular game.
-Considering this, the method studied was
-sufficiently general and flexible to draw some conclusions about the
-topic. SBPCG methods are a potential good solution to offline content
-generation but it requires a great amount of problem-specific
-knowledge. Like any other form of creative work, the biggest issue may
-be how to measure how good, creative or enjoyable is the piece. The
-more rules the author adds, expressiveness starts to get lost as the
-results are variations of the same idea. However, it is crystal clear
-from the experiments run in this paper that a lack of knowledge
-will lead to unexpected outcomes.
-In our case, the fitness function used the 
-stability of the structure and only considered other features--- overlapping 
-blocks and distance to the ground--- to ensure the levels would be valid.
-In experiment \ref{E5} and \ref{E6} height was also taken into account.
+That is why, besides incorporating the Physics engine, which sped up
+evaluation considerable and allowed us to explore a bigger space, we
+took height into account in fitness, so that higher structures were
+more varied and also more aesthetically pleasing. 
 
- % I am lost in this paragraph. It should be more
- % related to the actual experiments made - JJ
-
-The second objective, adapting the game to extract data from execution, was 
-certainly achieved. It was also a basic requirement to proceed with the rest of 
-them. The game does provide the data, as long as the input is correctly 
-structured. 
-% Although the original intention was to make it available on Linux, 
-% currently it can only be executed with the desired behaviour on Windows. 
-% Antonio - I think this is not relevant
-% Another issue is that the simulation is not easily adaptable. If the fitness 
-% function of the EA is changed and needs data that is not included in the 
-%output 
-% right now, the game would have to be changed and compiled again. 
-% Antonio - I would suggest this text instead
-In order to conduct our experiments the Angry Birds simulator (Science Birds) 
-has been adapted to our necessities, yielding now some  other information 
-required to evaluate the individuals of the implemented EA. As this was a 
-bottleneck, experiments \ref{E5} and \ref{E6} used only a physic simulation,
-leaving behind the actual game.
-It would be interesting to obtain other kind of data from both simulations,
-such as the height of the structure and, eventually, its resistance to
-bombardment by angry birds. However, this is left as future work.
-
-Producing stable structures under gravity was the third objective and
-the closest to the ultimate one. That objective was effectively
-achieved, but the consequence of evolving in a path of minimum
-movement or maximum stability results in structures that are close to
-the ground and do not have more than a few floors , which could not be very 
-exciting for the players. 
-% Antonio - I would add:
-% , which could not be very exciting for the players. 
-% Tell me what you think of this.
-% Floors is not precise. ..more than a few stacked blocks? - Mario 
-The main issue is, then, how we evaluate the levels. In fact this is 
-a matter of how we define what an Angry Birds' level \textit{is} and if that 
-definition matches the fitness function.
-%A lot of elements were correct, but the definition was not complete.
-How this definition of level plays
-with the paths of evolution is also a problem. Since we define as
-level as a structure that is stable, evolution will maximize stability
-finding, as in the beginnings of architectural practice, squat
-structures that are neither aesthetically pleasing nor playable,
-although undeniably sturdy and stable. We have been successful in,
-evolving free form structures, to find these type. But once we get
-there, we need to go into a different evolution mode that takes into
-account several features as a multiobjective optimization problem:
-stability is the first, but we can sacrifice a bit of stability for
-height or some other aesthetic quality.
-
-% This idea brings us to the last objective, that was not achieved. Without 
-% results that match the definition of an Angry Birds level, placing the 
-% remaining objects would not have made the level playable. The partial 
-% achievement of the third goal, blocked the fourth one as this objective was 
-% dependent on the third one.
-
-To conclude on an optimistic tone, this work provides an interesting insight 
-into the SBPCG, through the completion---and failure---of the goals we
-set out to achieve at the beginning.
-
-In order to improve the results of the method, different constraints could be 
-expressed as multiple objectives. Overlapping blocks and velocity could 
-be treated as minimization objectives and height as a maximization one. 
+The main challenges ahead lie in the inherent multi-objective nature
+of this problem. The fact that the structures need to be varied can be
+taken into account by the very nature of the generation problem and
+need not be included into fitness; this fitness should, however,
+consider aesthetics. Aesthetics is part constraint (for instance,
+symmetry could considered as such constraint), but also a score that
+we would need to maximize. What this score could be applied to a
+structure is not, a priori, straightforward. Adding to this requisite,
+the level should be challenging to the user, so that it should include
+a certain amount of protection for the hosted pigs, which would make
+it, as hinted, a multi-objective problem. A multi-objective problem
+multiplies the size of the search space, so additional speeding up
+techniques should probably have to be taken into account.
 
 If we pay attention at the stages of evolution in this work, there is also 
 room for improvement in the genetic operators. For example, the initialization 
@@ -610,7 +602,7 @@ produces a small amount of valid individuals which suggested that an elitist
 strategy for selection would work best. However, new experiments will help to 
 better balance exploration and exploitation. An interesting addition
 would be to add {\em building} operators that pile blocks on
-structures that are already stable. % Check out this idea, Laura - JJ
+structures that are already stable. 
 
 \section{Acknowledgements}
  This paper has been supported in part by DeepBio

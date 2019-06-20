@@ -33,7 +33,7 @@ and Third Author Name\sup{2}\orcidAuthor{0000-0000-0000-0000}}
 Game development, Angry Birds, Level generation }
 
 \abstract{
-	In this work, we present an original method based on evolutionary algorithms for generating basic structures for the physics-based game Angry Birds, with the ultimate objective of creating Angry Birds levels with the minimum number of constraints. We must generate structures that remain stable under gravity, in order to be playable in the game. We have designed and implemented an open source evolutionary computation library,  with a fitness function designed to  first, avoid if possible the an actual simulation of a game, which is time-consuming, and, then, to take into account the different ways in which a structure is not sound and consider how to achieve that soundness. We have experimented with different representations and evolutionary operators. In order to evaluate the algorithm,  we carried out six experiments, obtaining a wide variety of stable structures. These structures are the basis for generating levels that are aesthetically pleasing as well as playable.
+	In this work, we present an original method based on evolutionary algorithms for generating basic structures for the physics-based game Angry Birds, with the ultimate objective of creating Angry Birds levels with the minimum number of constraints. We set out to evolve free-form structures, and this means searching in a larger space. In this paper, we test how using a physics engine enables us to evaluate much more levels than a game engine simulation. In order to do this, we compare the results of experiments using both types of simulators and propose fitness functions accordingly. Results show the execution time drastically drops from 5 hours to less than 20 minutes on average. 
 }
 
 \onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
@@ -62,29 +62,29 @@ Search-based Procedural Content Generation (SBPCG) is a type of a
 \textit{generate-and-test} approach to PCG which is usually tackled
 with Evolutionary Algorithms(EA) \cite{togelius2010search}. The
 challenges faced by SBPCG are not far from those found in EAs; since
-they are search methods, they can be a good option to perform this
+they are search methods, they can be a good option to implement this
 kind of systems. In our case, as a first step to generate Angry Birds
 levels, we will generate free-form self-standing structures using the Angry
 Birds basic blocks. The main intention with this approach is to
 eventually generate structures that can host {\em pigs} and that
 achieve aesthetic quality mainly through variability and the fact that
 they are not cookie-cutter repetitions of the same basic structure
-with some small variations; at the same time
+with some small variations; at the same time,
 it becomes an interesting and challenging problem from the
 optimization point of view: using some basic building blocks and a
-simulated gravity, be able to generate structures that do not
+simulated gravity, to be able to generate structures that do not
 collapse. That is the main objective of this line of work.
 
-The primery objective of this paper, however, is to use a fitness function that is
+The primary objective of this paper, however, is to use a fitness function that is
 able to evaluate structures without needing the simulator, advancing
 the state of the art with respect to our previous paper
 \cite{DBLP:conf/evoW/CalleGGV19}, where we needed to use the simulator
-itself to check gravity, which incurred in a lot of overhead, up to
+itself to check gravity, which incurred in much overhead, up to
 several seconds.
 
 In this paper, we will use what \cite{togelius2010search} calls {\em
   direct fitness function}, this function computes a score from
-measurable features of the generated content.However, this fitness
+measurable features of the generated content. However, this fitness
 function is a time-consuming task since it involves the generation of
 a graphic representation of the structure and the simulation of the
 falling motion. If we have to evaluate every single individual in the
@@ -140,9 +140,8 @@ procedures.
 An alternative to deal with these limitations is to follow a
 \textit{Search-based approach}. Thus, Lucas Ferreira and Claudio
 Toledo \cite{ferreira2014search} presented a solution using a Genetic
-Algorithm (GA) and a game clone named \textit{Science Birds} developed
-to evaluate the levels, the same one we use in this paper. Their work
-was 4th on the last competition. In this GA, levels correspond to
+Algorithm (GA) and a clone of Angry Birds named \textit{Science Birds} developed
+to evaluate the levels. In this GA, levels correspond to
 individuals in a population, each individual has a chromosome
 represented by an array of lists. Each list is a sequence of blocks,
 pigs and predefined compound blocks, using an identification
@@ -195,81 +194,28 @@ increase the complexity of generated structures.
 
 \section{Problem Description}
 \label{sec:angry}
+In a previous work, we used {\em Science Birds} \cite{ferreira2014search}  as a starting point. Developed by Lucas Ferreira and Claudio Toledo, Science Birds has become the main open source Angry Birds simulator. However, we needed to modify the code in order to produce an output with the additional data needed to automate that work. The code is available in the GitHub repository \url{https://github.com/Laucalle/ScienceBirds}. The additional data contains the position and the average magnitude of the velocity of each block that remains after the simulation. One advantage is that the whole experiment can run without user intervention. Another advantage is that the amount of time spent on the simulation of each level is minimized to some extent.  Reducing the simulation time not only increases the number of evaluations by a certain range of time, but it is also a factor in competitions, where there is a fixed time limit for participants.
 
-Science Birds is nowadays the main open source Angry Birds
-simulator. It was developed by  Ferreira and Toledo
-\cite{ferreira2014search}, and is available from
-GitHub. We used it  as a starting point; however we
-had to patch it for producing usable output 
-and automate its work. The modified 
-version is available on GitHub \url{https://github.com/Laucalle/ScienceBirds}. It produces output 
-containing the position and average magnitude of the velocity of each block 
-that was not broken after the simulation. It can be run from beginning to end 
-without user interaction and minimizes the amount of time spent on simulating 
-each level. 
 
-In later experiments we will use Box2D (\url{https://box2d.org}), the
-Physics engine, written in C++, originally 
-used for the actual Angry Birds game, to avoid launching the whole
-game which adds overhead to the fitness evaluation. In this 
-simulation we do not have the resistance of the blocks implemented but we can test
-the level stability much more efficiently, since there is no overhead computing things
-unrelated to Physics, such as the graphic interface itself. This means we cannot penalize levels per broken block.
+To further decrease simulation time, in this paper, we use the Box2D (\url{https://box2d.org}) physics engine. This engine, written in C++, was initially used for the actual Angry Birds game. By just simulating the positioning of objects in memory, we can avoid launching the whole game, using bitmaps and screen rendering, which adds overhead to the process of fitness evaluation. Even if in this Box2D simulation we do not have the resistance of the blocks implemented, we can test the stability of level much more efficiently, since there is no overhead in computing things unrelated to Physics, such as the GUI. If we do not have block resistance in a simulation, blocks will not be destroyed when they hit each other; in that case, the fitness function should not take into account before and remaining blocks.
 
 %\subsection{Evolutionary Algorithm}\label{ch:Representation}
 
-Once the simulator that is going to be used to measure fitness is
-ready, we have to design the fitness function. As obvious as it
-might seem, the main feature of a stable level is that it 
-is not in motion, so it seems reasonable to evaluate its whole stillness as opposed to its speed -- considering every single block --.
+Once we chose the simulator that is going to be used to evaluate the fitness of a level, we must design the fitness function. As obvious as it might seem, the main feature of a sound level is that it is not in motion, so it seems reasonable to evaluate its complete stillness as opposed to its speed. We must consider every single block in doing this. 
 
 $$fitness_{ind} = \frac{1}{|V|}\sum_{i=0}^{b}{V_i} + P_{broken}\cdot(b-|V|)$$
 
-In this version, the game engine provides the average magnitude of
-velocity for each block. 
-This set is noted as $V$, with $|V|$ being the cardinality of the
-set.  $b$  is the number of blocks in an individual and it can differ
-from the cardinality of $V$ since collapsed blocks are not tracked. The
-number of broken blocks is $b-|V|$ and it is multiplied by a
-penalization factor, since a level whose blocks break without user
-interaction would not be considered valid. This happens when a block
-free-falls from a certain height or collides with a falling object. 
-$P_{broken}$ is set to $100$ since objects in a level do not usually reach that 
-velocity, therefore it will separate non-valid levels from potentially good 
-ones.
+When using Science Birds, the average magnitude of velocity is provided for each block. We note this as $V$, with $|V|$ being the cardinality of the set. The number of blocks in an individual is $b$, and it can differ from the cardinality of $V$ since we do not track collapsed blocks. The number of broken blocks is $b-|V|$, and it is multiplied by a penalization factor since a level whose blocks break without user interaction would not be considered valid.  Blocks can be broken when they fall from a certain height or collide with another object. We set the penalization factor $P_{broken}$ to $100$ since objects in a level do not usually reach that  velocity.  The goal of this evaluation is then to separate non-valid levels from potentially good ones.
 
-In the sixth experiment this fitness function is changed to the
-following function after observing the results for the previous
-experiment, al of them described in section \ref{ch:res}: 
+In the experiment, presented we changed this fitness function to the function shown below, after observing the results for the previous experiments \ref{ch:res}: 
 $$fitness_{indV2} = \max{(V)}$$
-% When we say length of a vector, we think about the norm (the actual lenght) 
-% for instance the hypotenuse in a 2D vector. I think here we are talking about 
-%the
-% number of elements. If V is a set, then the cardinality |V| is right. 
-% From your "calculateFitness" this is len so it is a list. 
-% I was confused because we are talking about magnitude, velocity, etc. 
-% Consider changing the name of V to an ordered set? - Mario
-% Done - Laura
 
+As we said before, simulating a level is a highly time-consuming task, much more when we simulate the whole game, it is in the order of seconds, which makes it almost unfeasible for our purpose. Next, we propose a method for evaluation, in which not all levels need are simulated.
 
-Either way, simulating a level is quite time consuming, on the order of
-seconds using the game, which makes it almost unfeasible for our purpose, so we
-decided to take additional factors on the fitness so that not all
-levels are actually simulated. 
-%Although we may know that a given level will perform poorly in the simulation, 
-%removing it from the population will cause a high loss of diversity.
-For that reason, before testing a level, there are some indicators, like
-distance to the ground and number of overlapping blocks, that a level would 
-not be a valid solution
-% Antonio - what do you mean? It is not clear.
-and thus simulation can be skipped.
+Some situations can indicate that a level has a very slim probability of being valid.  For instance, a block begins suspended in a position to far from the ground, or there are blocks with an overlapping position. If this is the case, then we skipped the simulation of the level. 
 
-If the object closest to the ground is far above, it is very likely that
-it, along with all the others blocks above, 
-will collapse from the impact. Levels that have all their blocks higher than a 
-certain threshold will not be simulated by the engine. The threshold used is 
-$0.1$ in game units and the penalty applied to the distance in order
-to compute the fitness value is $10$:
+When having a structure where the object closest to the ground is far above, it will likely collapse from the impact along with all the other blocks above. For this reason, we will not be simulating levels that have all their blocks higher than a  certain threshold. The threshold used is $0.1$ in-game units, and the penalty applied to the distance is $10$:
+
 $$f_{distance} = 
 \begin{cases}
 P_{distance}\cdot D_{lowest}, & \text{if } D_{lowest} > threshold\\
@@ -277,28 +223,15 @@ P_{distance}\cdot D_{lowest}, & \text{if } D_{lowest} > threshold\\
 \end{cases}
 $$
 
-The other measure is the number of overlapping blocks. The separating axis 
-theorem \cite{ericson2004real} determines if two convex shapes intersect. It is 
-commonly used in game development for detecting collisions. A level with blocks 
-that occupy the same space is not likely to be stable, as the Unity
-Engine underlying the simulator will solve the issue moving the blocks
-until there is no collision, but this is done by Unity proprietary
-code and it is not possible to know what it does. 
-% Since Unity 
-% Engine is not open source and there is no documentation on how exactly those 
-% collisions are solved, we assume that a precise prediction of the positions of 
-% the blocks is not possible and therefore the fitness value obtained could be 
-% inaccurate.
-So, a penalty is applied and the level is not simulated either. 
-In this case it is $f_{overlapping} = P_{overlapping} \cdot N_{overlapping}$ 
-where the first factor is a penalty set to $10$ and the second is the number of 
-blocks that overlap with each other.
 
-In some of the late experiments we will substitute the $f_{distance}$
-with the gap in the Y-axis.
-We project all blocks on the Y-axis and calculate the range of values for the Y coordinate
-that are not covered inside the feasible range. This is treated the same way as $f_{distance}$
-(same penalization and threshold) and we call it $f_{Y-axis}$:
+The other factor is the number of overlapping blocks. To determine if two convex shapes intersect, we can use the separating axis theorem \cite{ericson2004real}  used in game development for collision detection. A level with blocks that occupy the same space is not likely to be stable, as the Unity Engine underlying the simulator will solve the issue moving the blocks until there is no collision. Unity implements this behavior, and as it is proprietary software, it is not possible to know or change what it does. So, a penalty is also applied and the level is not simulated either. 
+
+
+For this case it is $f_{overlapping} = P_{overlapping} \cdot N_{overlapping}$ where the first factor is a penalty set to $10$ and the second is the number of  blocks overlapping with each other. 
+
+In some of the late experiments, we will substitute the $f_{distance}$ with the gap in the Y-axis.  We then project all blocks on the Y-axis and calculate the range of values in the Y coordinate that are not inside the feasible range. This gap is treated the same way as $f_{distance}$
+(same penalization and threshold) so we call it $f_{Y-axis}$:
+
 $$f_{Y-axis} = 
 \begin{cases}
 P_{distance}\cdot Pr_{Y-axis}, & \text{if } Pr_{Y-axis} > threshold\\
@@ -306,39 +239,26 @@ P_{distance}\cdot Pr_{Y-axis}, & \text{if } Pr_{Y-axis} > threshold\\
 \end{cases}
 $$
 
-If both $f_{distance}$ and $f_{overlapping}$ are $0$ then the level is suitable 
-for simulation and fitness is calculated as $fitness_{ind}$. This would be 
-considered \textit{overpenalization} but exploring unfeasible regions entails a 
-serious overhead that we need to minimize \cite{runarsson2003evolutionary}. 
-On the other hand, levels with 
-multiple blocks broken during the simulation are not feasible either but 
-running the simulation is necessary. In this case, the penalization does not 
-prevent the region to be explored.
+If both $f_{distance}$ and $f_{overlapping}$ are $0$ then the level is suitable for simulation and fitness is calculated as $fitness_{ind}$. We  could consider this approach as an \textit{overpenalization} but exploring unfeasible regions entails a serious overhead that we need to minimize \cite{runarsson2003evolutionary}. On the other hand, levels with multiple or even all blocks broken during the simulation are not feasible either but in this case, running the simulation is necessary. In this last case, penalization does not prevent the algorithm from exploring that region.
 
-Since one of the objectives of this work is to explore the expressiveness 
-and variability of SBPCG, it seems reasonable to use a flexible representation. 
-We will test these solutions to allow a less directed search than previous solutions while keeping a 
-simple representation. 
+Since one of the perceived benefits of SBPCG is the expressiveness and variability, it seems reasonable to use a flexible representation. We will design the GA to allow a less directed search than previous proposals while keeping the representation simple.
 
-Individuals are composed of a list of blocks; platforms, TNT boxes or pigs are not considered in this 
-paper, since we are focused on the generation of structures. These
-building blocks have the following attributes:
+Individuals are composed of a list of blocks; we do not consider, TNT boxes, or pigs in this paper since we are focused only on the generation of structures. These building blocks have the following attributes:
 
 \begin{itemize}
-	\item Type: there are eight regular blocks that can be placed in the level 
-	with distinct shapes or sizes; they are represented as an
+	\item Type: there are only eight basic blocks that can be placed in the level 
+	with differnt shapes and sizes; they are represented by an 
         integer between $0$ and $7$.
-	\item Position: coordinates $x$ and $y$ of the centre of the block in game 
-	units.
-	\item Rotation: rotation of the block in degrees. Four different 
+	\item Position: $x$ and $y$  coordinates from the centre of the block. Values are in game 
+	units and are represented as floating point numbres.
+	\item Rotation: rotation of the basic block in degrees. Only four different 
 	rotation angles are considered: 0, 45, 90 or 135 degrees represented as integers 
 	between $0$ and $3$.
-        \item Material: three types, which determine the durability 
-of the block. However, this does not affect their stability, so it will remain 
-constant for now as \textit{wood} material.
+	\item Material: there are three types \textit{wood}, \textit{metal} and \textit{glass}, which determine the durability of the block.
+	However, this does not affect their stability, so we only use \textit{wood} material for now.
 \end{itemize}
 
-Using this representation a gene representing a single block will be formed by two integers and two floating point numbers.
+Using this representation a gene representing a single block will be formed by two integers (type and position) and two floating point numbers (x and y coordinates).
 % Implementation detail, possibly irrelevant.
 % The position of the corners of the block is frequently required, so it is 
 %stored along with those attributes even though it can be calculated using the 
@@ -348,23 +268,20 @@ Individuals are a collection of genes, in the same way a level is a collection
 of building blocks. The number of blocks is variable and the order in which 
 they are listed is not important. 
 
-The fitness of the worst individual that has been tested in game is
-stored, so that the value of not tested levels is always above ---it is a minimization problem--- the in-game 
-tested levels; the starting point for fitness of such individuals is the 
-worst in-game score.
+We store the fitness of the worst individual that has been tested in-game so that the value of not tested levels is always above ---it is a minimization problem--- the in-game tested levels; the starting point for fitness of such individuals is the worst in-game score.
 
 This penalization is calculated using the distance of the lowest block to the 
-ground, which can be easily obtained, and the number of blocks that collide. 
+ground, which can be easily obtained, and the number of blocks that overlap. 
 This requires a bit more of computation, so it will be stored and set in the 
 initialization of the individual. When a gene is modified, the number of 
 overlapping blocks is recalculated for that specific change.
 
 Considering all of the above, the chromosome object is composed by:
 \begin{itemize}
-	\item A list of genes.
+	\item A non-fixed list of genes.
 	\item A fitness value.
 	\item A penalty (set to {\tt False} for in-game evaluated levels).
-	\item Number of overlapping blocks (calculated).
+	\item The number of overlapping blocks (calculated).
 \end{itemize} % not sure these implementation details should be
               % included. Let's leve them, but if space is in short
               % supply, we can eliminate - JJ
@@ -376,15 +293,15 @@ genes, which are initialized by several methods:
 
 \begin{itemize}
 	\item Random: selects a random number for each attribute of the gene.
-	\item No Overlapping: also selects a random number but the gene is only 
+	\item Non-overlapping: also selects a random number but the gene is only 
 	added to the chromosome if it does not overlap with an already existing 
 	gene.
 	\item Discrete: selects a random number for type and rotation, but the 
 	position must be multiple of the dimensions of the smallest block (blocks 
 	will be aligned).
-	\item Discrete without overlapping: it combines the second and third 
-	initialization method.
-	\item Discrete with a set of pre configured blocks: first it includes
+	\item Discrete non-overlapping: it combines the second and third 
+	initialization methods.
+	\item Discrete with a set of pre-configured blocks: first it includes
 	a set of blocks, and then adds blocks following the third method until
 	it reaches the desired number of blocks. The configurations used are the
 	compound blocks found in \cite{ferreira2014search}.
@@ -406,7 +323,7 @@ therefore they can appear several times in the list of parents.
 % of the algorithm are dynamic or adapted. - Mario
 % OK, I added it to the Future Work section. 
 
-Once the parents have been selected, we implement two different methods of 
+Once the parents have been selected, we chose from two different methods of 
 combination:
 \begin{itemize}
 	\item Sample Crossover: gives a single individual per parent pair. It takes 
@@ -420,7 +337,7 @@ combination:
 	\label{ga:cross2}
 \end{itemize}
 
-There are four different mutations:
+There are four different types of mutation:
 
 \begin{itemize}
 	\item Rotation: rotation is represented as an integer (it is discretized), 
@@ -440,29 +357,24 @@ There are four different mutations:
 
 They are all applied to random members of the population.
 
-The new generation is selected using an elitist strategy. Best individuals in 
-both the old population and their offspring pass on the next generation, 
+The new generation is produced following an elitist strategy. Best individuals in 
+both the old population and their offspring pass on to the next generation, 
 maintaining the size of the population.
 
 The information that describes a level can be too complex to have a binary 
-representation as pure genetic algorithms suggest, so the framework should be 
+representation as pure genetic algorithms suggest, so the framework used should be 
 flexible enough to support complex data structures. This prevented us from using other 
-frameworks
-and therefore a new framework was created. The source  code can be
-found on GitHub at \url{https://github.com/Laucalle/AngryBirdsLevelGenerator}. % Is this true?
+frameworks and therefore a new framework was immplemented. The source code is open source and can be found again in GitHub at \url{https://github.com/Laucalle/AngryBirdsLevelGenerator}. % Is this true?
 
-In order to evaluate the different options and check if they meet our
-objective, we performed a series of experiments presented in next
-section. 
+In order to assess the proposed methods and verify if they meet our
+objective, we performed a series of experiments presented in the next.
 
 %************************************************
 \section{Experiments and Results}\label{ch:res}
 
-We set out to evolve free-form structures, but we need to test, one by
-one, the different parts of our algorithm: fitness function, some
-evolutionary algorithm parameters and the genetic operators. In order
-to do so, we performed a set of experiments to test our hypotheses,
-whose result is shown in Table \ref{t:resOver1} shows an overview of the results. 
+We set out to evolve free-form structures, and this means searching in a larger space. In this experiment, we test how using a Physics engine enables us to evaluate much more levels than a game engine simulation. In order to do this, we compare the results of experiments with both simulators. Tables \ref{t:resOver1} and \ref{t:resOver2} 
+show an overview of the results. Experiments \textbf{E1} to \textbf{E4} were implemented 
+using a game engine simulator while \textbf{E5} and \textbf{E6} a physics engine.
 
 \begin{table}
 	\myfloatalign
@@ -503,8 +415,7 @@ whose result is shown in Table \ref{t:resOver1} shows an overview of the results
 	\end{tabular}
 	\caption{Summary of the results of the last generation in 15-20 runs for each
 		experiment. 40 runs for E5 and E6.
-		G: number of generations, E: experiment 
-		number} % What
+		} % What
 	% is E? Is that the average? Number of
 	% generations up to what?
 	% Also explain the importance of the
@@ -518,21 +429,17 @@ whose result is shown in Table \ref{t:resOver1} shows an overview of the results
 
 \subsection{Removing game and penalizing gaps in Y-axis}\label{E5}
 
-The main problem with the previous experiments was the time needed to
-load the Science Birds simulation environment and run the levels,
-which needed several seconds for loading and obtaining results. So the
-main objective of this experiment was to find a way to get
-rid of the in-game simulation. In order to do that, we will use a Physics engine
-called Box2D \cite{catto2011box2d} that was used in the development of the original game.
+The main problem with the previous experiments (\textbf{E1}-\textbf{E4}) was the time needed to load the Science Birds simulation environment to run the levels, which needed several seconds for loading and obtaining results. So the main objective of this experiment was to find a way to get rid of the in-game simulation. In order to do that, we will use the Box2D \cite{catto2011box2d} Physics engine we mentioned earlier.
+
 Since game physics do not usually resemble real world physics we adjusted
-the parameters so this simulation an the game behave in the same way.
+the parameters so this simulation and the game behave in the same way.
 As we can see in table \ref{t:resOver1} the execution time drastically
-drops from 5 hours to less than 20 minutes on average, even running
+drops from 5 hours to less than 20 minutes on average, even when running
 more generations in the process.
 
 
 This opened the way for performing more 
-operations on the individuals. In this case we chose to penalize
+operations for the individuals. In this case we chose to penalize
 not only the distance to the ground but also the \textit{gaps} in the
 Y-axis, which will make objects drop and maybe break.
 This will encourage individuals to grow vertically and not only horizontally

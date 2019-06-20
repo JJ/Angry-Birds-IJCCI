@@ -78,7 +78,7 @@ collapse. That is the main objective of this line of work.
 The primary objective of this paper, however, is to use a fitness function that is
 able to evaluate structures without needing the simulator, advancing
 the state of the art with respect to our previous paper
-\cite{DBLP:conf/evoW/CalleGGV19}, where we needed to use the simulator
+\cite{DBLP:conf/evoW/CalleGGV19anon}, where we needed to use the simulator
 itself to check gravity, which incurred in much overhead, up to
 several seconds.
 
@@ -185,7 +185,7 @@ constraining it to a fixed form, thus advancing the state of the art
 by allowing the creation of Angry Birds levels having any
 arrangement. The next section will describe how we characterize this
 problem and our approach to it. In our previous paper
-\cite{DBLP:conf/evoW/CalleGGV19} we explored this approach and found
+\cite{DBLP:conf/evoW/CalleGGV1919} we explored this approach and found
 as one of its shortcomings the fact that the evaluation of generated
 structures through the simulator was lengthy and didn't leave the
 algorithm enough time to explore the search space. In this paper, we
@@ -374,7 +374,12 @@ objective, we performed a series of experiments presented in the next.
 
 We set out to evolve free-form structures, and this means searching in a larger space. In this experiment, we test how using a Physics engine enables us to evaluate much more levels than a game engine simulation. In order to do this, we compare the results of experiments with both simulators. Tables \ref{t:resOver1} and \ref{t:resOver2} 
 show an overview of the results. Experiments \textbf{E1} to \textbf{E4} were implemented 
-using a game engine simulator while \textbf{E5} and \textbf{E6} a physics engine.
+using a game engine simulator while \textbf{E5} and \textbf{E6} a
+physics engine. The results of experiments 1 to 4 were presented in
+\cite{DBLP:conf/evoW/CalleGGV19anon}; the need to speed up evaluation
+prompted us to move the evaluation of the physics of the structure to
+the program itself, thus avoiding the overhead incurred in entering
+the simulator.
 
 \begin{table}
 	\myfloatalign

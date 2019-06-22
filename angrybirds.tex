@@ -324,8 +324,6 @@ Considering all of the above, the chromosome object is composed by:
               % included. Let's leve them, but if space is in short
               % supply, we can eliminate - JJ
 
-%\subsection{Genetic Operators}
-
 Initialization is done randomly, with each individual having a random number of 
 genes, which are initialized by several methods: 
 
@@ -516,15 +514,21 @@ slowed down
 again, with a different fitness function we cannot compare the fitness
 value with the rest of the experiments. 
 %
-\begin{figure*}
+\begin{figure}
  	\centering
- 	\includegraphics[scale=0.75]{E6.png}
+ 	\includegraphics[scale=0.35]{E6.png}
  	\caption{One of the solutions from \ref{E6}. Blue blocks are
           composed of ice, while brownish blocks and poles are
           composed of wood. In Angry Birds, blocks differ in
           flexibility, weight but also fragility.}\label{f:e6}
- \end{figure*}
-
+\end{figure}
+%
+\begin{figure}
+ 	\centering
+ 	\includegraphics[scale=0.25]{Images/e6-2.png}
+ 	\caption{Another solution for E6\ref{E6}. Despite some initial
+        movement, this eventually stood still.}\label{f:e6:2}
+ \end{figure}
 
 Table \ref{t:resOver1} shows that this again
 increases the time needed to carry out the simulation. It also changes
@@ -535,7 +539,8 @@ they introduce a new term. What we see is that the variability of
 solutions is decreased with respect to the previous experiment,
 showing that this change increases the robustness of the algorithm,
 but also its exploration capability, since the difference between the
-best, worst and average is bigger than in the previous experiment. Figure \ref{f:e6} also
+best, worst and average is bigger than in the previous
+experiment. Figures \ref{f:e6} and label{f:e6:2} also
 shows how this fitness generates structures that are stable but also
 have some {\em interesting} appearance, including space that could be
 occupied by pigs below the tables. At the same time, this also shows

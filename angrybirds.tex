@@ -22,11 +22,13 @@
 
 \title{Speeding up evaluation of structures for the Angry Birds Game}
 
-\author{\authorname{First Author Name\sup{1}\orcidAuthor{0000-0000-0000-0000}, Second Author Name\sup{1}\orcidAuthor{0000-0000-0000-0000} 
-and Third Author Name\sup{2}\orcidAuthor{0000-0000-0000-0000}}
-\affiliation{\sup{1}Place Holder, XYZ University, My Street, MyTown, MyCountry}
-\affiliation{\sup{2}Place Holder, Main University, MySecondTown, MyCountry}
-\email{\{f\_author, s\_author\}@ips.xyz.edu, t\_author@dc.mu.edu}
+\author{\authorname{Laura Calle\sup{1}, Juan-Julián
+    Merelo-Guervós\sup{2}\orcidAuthor{0000-0001-8956-5304}, Mario García-Valdez\sup{3}\orcidAuthor{0000-0002-2593-1114}
+and Antonio Mora-García\sup{2}\orcidAuthor{0000-0003-1603-9105}}
+\affiliation{\sup{1}Universidad de Málaga, Spain}
+\affiliation{\sup{2}Universidad de Granada,Spain}
+\affiliation{\sup{3}Instituto Tecnológico de Tijuana, Mexico}
+\email{laucalle09@gmail.com, jmerelo@ugr.es, mario@tectijuana.edu.mx, amorag@ugr.es}
 }
 
 \keywords{Search-Based Procedural Content Generator, Evolutionary algorithm, 
@@ -78,7 +80,7 @@ collapse. That is the main objective of this line of work.
 The primary objective of this paper, however, is to use a fitness function that is
 able to evaluate structures without needing the simulator, advancing
 the state of the art with respect to our previous paper
-\cite{DBLP:conf/evoW/CalleGGV19anon}, where we needed to use the simulator
+\cite{DBLP:conf/evoW/CalleGGV19}, where we needed to use the simulator
 itself to check gravity, which incurred in much overhead, up to
 several seconds.
 
@@ -211,9 +213,7 @@ Ferreira and Claudio Toledo, Science Birds has become the main open
 source Angry Birds simulator. However, we needed to modify the code in
 order to produce an output with the additional data needed to automate
 that work. The code is available in the GitHub repository
-% \url{https://github.com/Laucalle/ScienceBirds}
-\url{https://url.hidden}
-. The additional data
+\url{https://github.com/Laucalle/ScienceBirds}. The additional data
 contains the position and the average magnitude of the velocity of
 each block that remains after the simulation. One advantage is that
 the whole experiment can run without user intervention. Another
@@ -392,9 +392,7 @@ representation as pure genetic algorithms suggest, so the framework used should 
 flexible enough to support complex data structures. This prevented us from using other 
 frameworks and therefore a new framework was implemented. The source
 code is open source and can be found again in GitHub at
-%\url{https://github.com/Laucalle/AngryBirdsLevelGenerator}
-\url{https://hidden.url}
-. % Is this true?
+\url{https://github.com/Laucalle/AngryBirdsLevelGenerator}.
 
 In order to assess the proposed methods and verify if they meet our
 objective, we performed a series of experiments presented in the next.
